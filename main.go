@@ -13,9 +13,9 @@ import (
 
 	"io/ioutil"
 
+	"github.com/mpetavy/common"
 	"github.com/mpetavy/go-dicom"
 	"github.com/mpetavy/go-dicom/dicomtag"
-	"github.com/mpetavy/common"
 )
 
 var (
@@ -231,6 +231,6 @@ func run() error {
 func main() {
 	defer common.Cleanup()
 
-	common.New(&common.App{"dicom", "1.0.3", "2017", "Tool to inspect DICOM files and export payload", "mpetavy", common.APACHE, "https://github.com/mpetavy/dicom", false, nil,nil, nil, run, time.Duration(0)}, []string{"i"})
+	common.New(&common.App{"dicom", "1.0.3", "2017", "Tool to inspect DICOM files and export payload", "mpetavy", common.APACHE, "https://github.com/mpetavy/dicom", false, nil, nil, run, time.Duration(0)}, []string{"i"})
 	common.Run()
 }
