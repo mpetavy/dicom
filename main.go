@@ -3,13 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/pkg/errors"
 	"image"
 	"os"
 	"path/filepath"
 	"regexp"
-	"time"
-
-	"github.com/pkg/errors"
 
 	"io/ioutil"
 
@@ -65,6 +63,10 @@ var (
 		"1.2.840.10008.1.2.4.103 MPEG-4 AVC/H.264 BD-compatible High Profile / Level 4.1",
 	}
 )
+
+func init() {
+	common.Init("dicom", "1.0.3", "2017", "Tool to inspect DICOM files and export payload", "mpetavy", common.APACHE, "https://github.com/mpetavy/dicom", false, nil, nil, run, 0)
+}
 
 func find(l []string, e string) bool {
 	p, err := common.IndexOf(l, e)
@@ -231,6 +233,5 @@ func run() error {
 func main() {
 	defer common.Cleanup()
 
-	common.New(&common.App{"dicom", "1.0.3", "2017", "Tool to inspect DICOM files and export payload", "mpetavy", common.APACHE, "https://github.com/mpetavy/dicom", false, nil, nil, run, time.Duration(0)}, []string{"i"})
-	common.Run()
+	common.Run([]string{"i"})
 }
