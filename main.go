@@ -132,7 +132,7 @@ func processImage(path string, dim int) error {
 }
 
 func processFile(path string) error {
-	curdir, err := common.CurDir()
+	curdir, err := os.Getwd()
 	if err != nil {
 		return err
 	}
