@@ -146,7 +146,7 @@ func processFile(path string) error {
 		for _, elem := range data.Elements {
 			tn, err := dicomtag.FindTagInfo(elem.Tag)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "%s\n", err)
+				common.Error(err)
 				continue
 			}
 
@@ -169,7 +169,7 @@ func processFile(path string) error {
 	for _, elem := range data.Elements {
 		tn, err := dicomtag.FindTagInfo(elem.Tag)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s\n", err)
+			common.Error(err)
 			continue
 		}
 
