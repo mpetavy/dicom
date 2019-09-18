@@ -192,7 +192,7 @@ func processFile(path string) error {
 			for _, frame := range data.Frames {
 				path := fmt.Sprintf("%s.%d.jpg", filepath.Join(curdir, filepath.Base(path)), n)
 				n++
-				ioutil.WriteFile(path, frame, os.ModePerm)
+				ioutil.WriteFile(path, frame, common.FileFileMode)
 			}
 		}
 	}
