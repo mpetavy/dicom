@@ -65,7 +65,7 @@ var (
 )
 
 func init() {
-	common.Init("dicom", "1.0.3", "2017", "Tool to inspect DICOM files and export payload", "mpetavy", common.APACHE, "https://github.com/mpetavy/dicom", false, nil, nil, run, 0)
+	common.Init("1.0.3", "2017", "Tool to inspect DICOM files and export payload", "mpetavy", common.APACHE, false, nil, nil, run, 0)
 }
 
 func find(l []string, e string) bool {
