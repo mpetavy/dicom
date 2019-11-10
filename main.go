@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	input   = flag.String("i", "", "File you want to parse")
+	file    = flag.String("f", "", "File you want to parse")
 	extract = flag.Bool("x", false, "Extract PixelData")
 	dim     = flag.Int("dim", 0, "Dimension of target")
 	verbose = flag.Bool("v", false, "Show verbose information")
@@ -201,30 +201,30 @@ func processFile(path string) error {
 }
 
 func run() error {
-	b, err := common.FileExists(*input)
+	b, err := common.FileExists(*file)
 	if err != nil {
 		return err
 	}
 
 	if b {
-		isDir, err := common.IsDirectory(*input)
+		isDir, err := common.IsDirectory(*file)
 		if err != nil {
 			return err
 		}
 
 		if !isDir {
-			err := processFile(*input)
+			err := processFile(*file)
 			if err != nil {
 				return err
 			}
 		} else {
-			err := filepath.Walk(*input, fileWalker)
+			err := filepath.Walk(*file, fileWalker)
 			if err != nil {
 				return err
 			}
 		}
 	} else {
-		common.Error(errors.Wrap(&common.ErrFileNotFound{FileName: *input}, *input))
+		common.Error(errors.Wrap(&common.ErrFileNotFound{FileName: *file}, *file))
 	}
 
 	return nil
@@ -233,5 +233,5 @@ func run() error {
 func main() {
 	defer common.Done()
 
-	common.Run([]string{"i"})
+	common.Run([]string{"f"})
 }
