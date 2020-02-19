@@ -69,10 +69,10 @@ func init() {
 }
 
 func find(l []string, e string) bool {
-	p, err := common.IndexOf(l, e)
+	p := common.IndexOf(l, e)
 
-	if err != nil {
-		panic(err)
+	if p == -1 {
+		panic(fmt.Errorf("cannot find %+v in %+v", e, l))
 	}
 
 	return p >= 0
@@ -175,9 +175,9 @@ func processFile(path string) error {
 
 		bool := *verbose
 		if !bool {
-			p, err := common.IndexOf(tags, elem.Tag)
-			if err != nil {
-				return err
+			p := common.IndexOf(tags, elem.Tag)
+			if p == -1 {
+				return fmt.Errorf("cannot find %+v in %+v", elem.Tag, tags)
 			}
 
 			bool = p >= 0
