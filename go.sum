@@ -179,8 +179,6 @@ github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJ
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
-github.com/mpetavy/common v1.1.26 h1:Iu0mbLMh5OgJGY0mUNwvVPDqHlRjWmD3z8HO1j3liHQ=
-github.com/mpetavy/common v1.1.26/go.mod h1:noUbw++8J/7TcwF8y+UeKbAxoKau5rVcSsagiw1h2s4=
 github.com/mpetavy/go-dicom v0.0.0-20190814071450-4549dcb04c37 h1:js1uR/xgQ/4KWwjwXaCijSnFIWhIy39ltVM9un+wCDE=
 github.com/mpetavy/go-dicom v0.0.0-20190814071450-4549dcb04c37/go.mod h1:lVkCe4fKOY1EPIC/ll//RVxZ7Zfcc1yBZAeexnCTpPM=
 github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRWi+5nqEBWmkhHvq77mSJWrCKwh8bxhgT7d/eI7P4U=

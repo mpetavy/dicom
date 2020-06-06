@@ -1,5 +1,7 @@
 package main
 
+// dicom jsonpath, pbcopy, tee
+
 import (
 	"flag"
 	"fmt"
@@ -19,7 +21,6 @@ import (
 var (
 	file    = flag.String("f", "", "File you want to parse")
 	extract = flag.Bool("x", false, "Extract PixelData")
-	dim     = flag.Int("dim", 0, "Dimension of target")
 	verbose = flag.Bool("v", false, "Show verbose information")
 	search  = flag.String("s", "", "Tag to search for with case insensitive lookup. Supports regexp")
 )
@@ -65,7 +66,7 @@ var (
 )
 
 func init() {
-	common.Init("1.0.3", "2017", "Tool to inspect DICOM files and export payload", "mpetavy", fmt.Sprintf("https://github.com/mpetavy/%s", common.Title()), common.APACHE, nil, nil, run, 0)
+	common.Init("1.0.3", "2017", "Tool to inspect DICOM file header and content", "mpetavy", fmt.Sprintf("https://github.com/mpetavy/%s", common.Title()), common.APACHE, nil, nil, run, 0)
 }
 
 func find(l []string, e string) bool {
@@ -106,7 +107,8 @@ func fileWalker(path string, fi os.FileInfo, err error) error {
 	if filepath.Ext(fi.Name()) == ".dcm" {
 		fmt.Printf("--------------------------------------\n")
 		fmt.Printf("%s\n", fi.Name())
-		processFile(path)
+
+		common.Error(processFile(path))
 	}
 
 	return err
@@ -118,7 +120,9 @@ func processImage(path string, dim int) error {
 		return err
 	}
 
-	defer f.Close()
+	defer func() {
+		common.Error(f.Close())
+	}()
 
 	img, imgType, err := image.Decode(f)
 	if err != nil {
@@ -150,12 +154,12 @@ func processFile(path string) error {
 				continue
 			}
 
-			bool, err := regexp.MatchString("(?i)"+*search, tn.Name)
+			b, err := regexp.MatchString("(?i)"+*search, tn.Name)
 			if err != nil {
 				return err
 			}
 
-			if bool {
+			if b {
 				fmt.Printf("%s: %s\n", tn.Name, elem.String())
 			}
 		}
@@ -168,23 +172,21 @@ func processFile(path string) error {
 	n := 0
 	for _, elem := range data.Elements {
 		tn, err := dicomtag.FindTagInfo(elem.Tag)
-		if err != nil {
-			common.Error(err)
+		if common.DebugError(err) {
 			continue
 		}
 
-		bool := *verbose
-		if !bool {
+		if !*verbose {
 			p := common.IndexOf(tags, elem.Tag)
 			if p == -1 {
-				return fmt.Errorf("cannot find %+v in %+v", elem.Tag, tags)
+				continue
 			}
-
-			bool = p >= 0
 		}
 
-		if bool {
+		if !*common.FlagNoBanner {
 			fmt.Printf("%-25s: %s\n", tn.Name, elem.String())
+		} else {
+			fmt.Printf("%s\n", elem.String())
 		}
 
 		if *extract && elem.Tag == dicomtag.PixelData {
@@ -192,7 +194,7 @@ func processFile(path string) error {
 			for _, frame := range data.Frames {
 				path := fmt.Sprintf("%s.%d.jpg", filepath.Join(curdir, filepath.Base(path)), n)
 				n++
-				ioutil.WriteFile(path, frame, common.DefaultFileMode)
+				common.Error(ioutil.WriteFile(path, frame, common.DefaultFileMode))
 			}
 		}
 	}
