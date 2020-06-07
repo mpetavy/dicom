@@ -186,6 +186,8 @@ github.com/mpetavy/go-dicom v0.0.0-20190814071450-4549dcb04c37 h1:js1uR/xgQ/4KWw
 github.com/mpetavy/go-dicom v0.0.0-20190814071450-4549dcb04c37/go.mod h1:lVkCe4fKOY1EPIC/ll//RVxZ7Zfcc1yBZAeexnCTpPM=
 github.com/mpetavy/go-dicom v0.0.0-20200320094211-949fcb8bb2bc h1:Aey5BZcZ4Idg4hn5z1xh7NpC+R1nsjP6ActRTCNuEys=
 github.com/mpetavy/go-dicom v0.0.0-20200320094211-949fcb8bb2bc/go.mod h1:95+k96pQKzYVTf0QBjQaw84+NWBc6tDkqXEiIy+M1AA=
+github.com/mpetavy/go-dicom v0.0.0-20200607105844-561ed6d653d4 h1:qJNxLa1dGb1xE89FX+V5CgOWq6fgPCPOsscKKNWAwus=
+github.com/mpetavy/go-dicom v0.0.0-20200607105844-561ed6d653d4/go.mod h1:sO18yX9dhQiVL9J7rG4kl5B8zmcFOKecQe0zYLvtmtA=
 github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRWi+5nqEBWmkhHvq77mSJWrCKwh8bxhgT7d/eI7P4U=
 github.com/opentracing/opentracing-go v1.1.0/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
 github.com/paulrosania/go-charset v0.0.0-20190326053356-55c9d7a5834c h1:P6XGcuPTigoHf4TSu+3D/7QOQ1MbL6alNwrGhcW7sKw=
