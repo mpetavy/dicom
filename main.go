@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 
 	"io/ioutil"
 
@@ -169,9 +170,16 @@ func processFile(path string) error {
 
 	tags := []dicomtag.Tag{dicomtag.SOPClassUID, dicomtag.SOPInstanceUID, dicomtag.PatientName, dicomtag.TransferSyntaxUID, dicomtag.PatientID, dicomtag.Columns, dicomtag.Rows}
 
-	n := 0
-	for _, elem := range data.Elements {
-		tn, err := dicomtag.FindTagInfo(elem.Tag)
+	tagNames := make([]string, 0)
+	for _, tagInfo := range dicomtag.AllTags() {
+		tagNames = append(tagNames, tagInfo.Name)
+	}
+
+	sort.Strings(tagNames)
+
+	imageCounter := 0
+	for _, tagName := range tagNames {
+		elem, err := data.FindElementByName(tagName)
 		if common.DebugError(err) {
 			continue
 		}
@@ -184,7 +192,7 @@ func processFile(path string) error {
 		}
 
 		if !*common.FlagNoBanner {
-			fmt.Printf("%-25s: %s\n", tn.Name, elem.String())
+			fmt.Printf("%-25s: %s\n", tagName, elem.String())
 		} else {
 			fmt.Printf("%s\n", elem.String())
 		}
@@ -192,8 +200,8 @@ func processFile(path string) error {
 		if *extract && elem.Tag == dicomtag.PixelData {
 			data := elem.Value[0].(dicom.PixelDataInfo)
 			for _, frame := range data.Frames {
-				path := fmt.Sprintf("%s.%d.jpg", filepath.Join(curdir, filepath.Base(path)), n)
-				n++
+				path := fmt.Sprintf("%s.%d.jpg", filepath.Join(curdir, filepath.Base(path)), imageCounter)
+				imageCounter++
 				common.Error(ioutil.WriteFile(path, frame, common.DefaultFileMode))
 			}
 		}
