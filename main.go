@@ -6,7 +6,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/mpetavy/go-dicom"
-	"github.com/pkg/errors"
 	"image"
 	"os"
 	"path/filepath"
@@ -211,30 +210,25 @@ func processFile(path string) error {
 }
 
 func run() error {
-	b, err := common.FileExists(*file)
+	if !common.FileExists(*file) {
+		return &common.ErrFileNotFound{*file}
+	}
+
+	isDir, err := common.IsDirectory(*file)
 	if err != nil {
 		return err
 	}
 
-	if b {
-		isDir, err := common.IsDirectory(*file)
+	if !isDir {
+		err := processFile(*file)
 		if err != nil {
 			return err
 		}
-
-		if !isDir {
-			err := processFile(*file)
-			if err != nil {
-				return err
-			}
-		} else {
-			err := filepath.Walk(*file, fileWalker)
-			if err != nil {
-				return err
-			}
-		}
 	} else {
-		common.Error(errors.Wrap(&common.ErrFileNotFound{FileName: *file}, *file))
+		err := filepath.Walk(*file, fileWalker)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
