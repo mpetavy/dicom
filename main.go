@@ -3,6 +3,7 @@ package main
 // dicom jsonpath, pbcopy, tee
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"github.com/mpetavy/go-dicom"
@@ -19,10 +20,11 @@ import (
 )
 
 var (
-	file    = flag.String("f", "", "File you want to parse")
-	extract = flag.Bool("x", false, "Extract PixelData")
-	verbose = flag.Bool("v", false, "Show verbose information")
-	search  = flag.String("s", "", "Tag to search for with case insensitive lookup. Supports regexp")
+	file      = flag.String("f", "", "File you want to parse")
+	recursive = flag.Bool("r", false, "Recursive directory scan")
+	extract   = flag.Bool("x", false, "Extract PixelData")
+	verbose   = flag.Bool("v", false, "Show verbose information")
+	search    = flag.String("s", "", "Tag to search for with case insensitive lookup. Supports regexp")
 )
 
 var (
@@ -93,69 +95,28 @@ func isMpegTransferSyntax(st string) bool {
 	return find(MPEG_LIST, st)
 }
 
-func fileWalker(path string, fi os.FileInfo, err error) error {
-	if err != nil {
-		return err
-	}
-
-	// don't parse nested directories
-	if fi.IsDir() {
-		return nil
-	}
-
-	// not a DICOM file
-	if filepath.Ext(fi.Name()) == ".dcm" {
-		fmt.Printf("--------------------------------------\n")
-		fmt.Printf("%s\n", fi.Name())
-
-		common.Error(processFile(path))
-	}
-
-	return err
-}
-
-func processImage(path string) error {
-	f, err := os.Open(path)
-	if err != nil {
-		return err
-	}
-
-	defer func() {
-		common.Error(f.Close())
-	}()
-
-	img, imgType, err := image.Decode(f)
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf("bounds x=%d, y=%d\n", img.Bounds().Max.X, img.Bounds().Max.Y)
-	fmt.Printf("%s\n", imgType)
-
-	return nil
-}
-
 func processFile(path string) error {
+	fmt.Printf("%s\n", path)
 	curdir, err := os.Getwd()
-	if err != nil {
+	if common.Error(err) {
 		return err
 	}
 
 	data, err := dicom.ReadDataSetFromFile(path, dicom.ReadOptions{DropPixelData: !*extract})
-	if err != nil {
+	if common.Error(err) {
 		return err
 	}
 
 	if *search != "" {
 		for _, elem := range data.Elements {
 			tn, err := dicomtag.FindTagInfo(elem.Tag)
-			if err != nil {
+			if common.Error(err) {
 				common.Error(err)
 				continue
 			}
 
 			b, err := regexp.MatchString("(?i)"+*search, tn.Name)
-			if err != nil {
+			if common.Error(err) {
 				return err
 			}
 
@@ -196,39 +157,40 @@ func processFile(path string) error {
 			fmt.Printf("%s\n", elem.String())
 		}
 
-		if *extract && elem.Tag == dicomtag.PixelData {
+		if elem.Tag == dicomtag.PixelData {
 			data := elem.Value[0].(dicom.PixelDataInfo)
 			for _, frame := range data.Frames {
-				path := fmt.Sprintf("%s.%d.jpg", filepath.Join(curdir, filepath.Base(path)), imageCounter)
-				imageCounter++
-				common.Error(ioutil.WriteFile(path, frame, common.DefaultFileMode))
+				if *extract {
+					path := fmt.Sprintf("%s.%d.jpg", filepath.Join(curdir, filepath.Base(path)), imageCounter)
+					imageCounter++
+					common.Error(ioutil.WriteFile(path, frame, common.DefaultFileMode))
+				}
+
+				img, imgType, err := image.Decode(bytes.NewReader(frame))
+				if common.Error(err) {
+					return err
+				}
+
+				fmt.Printf("bounds x=%d, y=%d\n", img.Bounds().Max.X, img.Bounds().Max.Y)
+				fmt.Printf("%s\n", imgType)
 			}
 		}
 	}
+
+	fmt.Println()
 
 	return nil
 }
 
 func run() error {
-	if !common.FileExists(*file) {
-		return &common.ErrFileNotFound{*file}
-	}
+	err := common.WalkFilepath(*file, *recursive, true, func(file string) error {
+		common.Error(processFile(file))
 
-	isDir, err := common.IsDirectory(*file)
-	if err != nil {
+		return nil
+	})
+
+	if common.Error(err) {
 		return err
-	}
-
-	if !isDir {
-		err := processFile(*file)
-		if err != nil {
-			return err
-		}
-	} else {
-		err := filepath.Walk(*file, fileWalker)
-		if err != nil {
-			return err
-		}
 	}
 
 	return nil
