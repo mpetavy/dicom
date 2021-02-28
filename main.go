@@ -6,17 +6,14 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"github.com/mpetavy/common"
 	"github.com/mpetavy/go-dicom"
+	"github.com/mpetavy/go-dicom/dicomtag"
 	"image"
 	"os"
 	"path/filepath"
 	"regexp"
 	"sort"
-
-	"io/ioutil"
-
-	"github.com/mpetavy/common"
-	"github.com/mpetavy/go-dicom/dicomtag"
 )
 
 var (
@@ -163,7 +160,7 @@ func processFile(path string) error {
 				if *extract {
 					path := fmt.Sprintf("%s.%d.jpg", filepath.Join(curdir, filepath.Base(path)), imageCounter)
 					imageCounter++
-					common.Error(ioutil.WriteFile(path, frame, common.DefaultFileMode))
+					common.Error(os.WriteFile(path, frame, common.DefaultFileMode))
 				}
 
 				img, imgType, err := image.Decode(bytes.NewReader(frame))
