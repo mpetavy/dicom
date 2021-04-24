@@ -209,8 +209,8 @@ github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJ
 github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/mpetavy/common v1.1.31/go.mod h1:27v5+lsL7Y53hUd5SBGrKeA8w+8RstjM5xTEvRV8Mlw=
-github.com/mpetavy/common v1.1.112 h1:OPG+UXgNJsHTgt6Af9RahJNsJaahPViDhl8uuD5ULnw=
-github.com/mpetavy/common v1.1.112/go.mod h1:cCPy9uvLshKqcX2ACKa7z669ZTPoG679jiPhizspwIU=
+github.com/mpetavy/common v1.2.0 h1:AdHyC2C0mLpXafLWlTHZfkzMOyZ0exwnKpbwK/vzyWc=
+github.com/mpetavy/common v1.2.0/go.mod h1:cCPy9uvLshKqcX2ACKa7z669ZTPoG679jiPhizspwIU=
 github.com/mpetavy/go-dicom v0.0.0-20200607105844-561ed6d653d4 h1:qJNxLa1dGb1xE89FX+V5CgOWq6fgPCPOsscKKNWAwus=
 github.com/mpetavy/go-dicom v0.0.0-20200607105844-561ed6d653d4/go.mod h1:sO18yX9dhQiVL9J7rG4kl5B8zmcFOKecQe0zYLvtmtA=
 github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRWi+5nqEBWmkhHvq77mSJWrCKwh8bxhgT7d/eI7P4U=
