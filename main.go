@@ -65,7 +65,7 @@ var (
 )
 
 func init() {
-	common.Init(false, "1.0.3", "", "2017", "Tool to inspect DICOM file header and content", "mpetavy", fmt.Sprintf("https://github.com/mpetavy/%s", common.Title()), common.APACHE, nil, nil, nil, run, 0)
+	common.Init(false, "1.0.3", "", "", "2017", "Tool to inspect DICOM file header and content", "mpetavy", fmt.Sprintf("https://github.com/mpetavy/%s", common.Title()), common.APACHE, nil, nil, nil, run, 0)
 }
 
 func find(l []string, e string) bool {
