@@ -1,9 +1,9 @@
 module github.com/mpetavy/dicom
 
-go 1.19
+go 1.20
 
 require (
-	github.com/mpetavy/common v1.5.50
+	github.com/mpetavy/common v1.5.51
 	github.com/mpetavy/go-dicom v0.0.0-20210302105037-44b79120da96
 )
 
