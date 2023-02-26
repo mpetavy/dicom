@@ -180,7 +180,7 @@ func processFile(path string) error {
 }
 
 func run() error {
-	fw, err := common.NewFilewalker(*file, *recursive, true, func(file string, f os.FileInfo) error {
+	err := common.WalkFiles(*file, *recursive, true, func(file string, f os.FileInfo) error {
 		if f.IsDir() {
 			return nil
 		}
@@ -189,11 +189,6 @@ func run() error {
 
 		return nil
 	})
-	if common.Error(err) {
-		return err
-	}
-
-	err = fw.Run()
 	if common.Error(err) {
 		return err
 	}
