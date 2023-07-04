@@ -3,7 +3,7 @@ module github.com/mpetavy/dicom
 go 1.20
 
 require (
-	github.com/mpetavy/common v1.6.3
+	github.com/mpetavy/common v1.6.4
 	github.com/mpetavy/go-dicom v0.0.0-20230223204403-807ccc095cae
 )
 
