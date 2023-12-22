@@ -4,6 +4,7 @@ package main
 
 import (
 	"bytes"
+	"embed"
 	"flag"
 	"fmt"
 	"github.com/mpetavy/common"
@@ -64,8 +65,11 @@ var (
 	}
 )
 
+//go:embed go.mod
+var resources embed.FS
+
 func init() {
-	common.Init("dicom", "", "", "", "2017", "Tool to inspect DICOM file header and content", "mpetavy", fmt.Sprintf("https://github.com/mpetavy/%s", common.Title()), common.APACHE, nil, nil, nil, run, 0)
+	common.Init("", "", "", "", "Tool to inspect DICOM file header and content", "", "", "", &resources, nil, nil, run, 0)
 }
 
 func find(l []string, e string) bool {
