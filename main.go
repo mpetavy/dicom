@@ -129,7 +129,11 @@ func processFile(path string) error {
 		return nil
 	}
 
-	tags := []dicomtag.Tag{dicomtag.SOPClassUID, dicomtag.SOPInstanceUID, dicomtag.PatientName, dicomtag.TransferSyntaxUID, dicomtag.PatientID, dicomtag.Columns, dicomtag.Rows}
+	standardTags := []dicomtag.Tag{dicomtag.SOPClassUID, dicomtag.SOPInstanceUID, dicomtag.PatientName, dicomtag.TransferSyntaxUID, dicomtag.PatientID, dicomtag.Columns, dicomtag.Rows}
+
+	if *extract {
+		standardTags = append(standardTags, dicomtag.PixelData)
+	}
 
 	tagNames := make([]string, 0)
 	for _, tagInfo := range dicomtag.AllTags() {
@@ -138,7 +142,6 @@ func processFile(path string) error {
 
 	sort.Strings(tagNames)
 
-	imageCounter := 0
 	for _, tagName := range tagNames {
 		elem, err := data.FindElementByName(tagName)
 		if common.DebugError(err) {
@@ -146,35 +149,55 @@ func processFile(path string) error {
 		}
 
 		if !*verbose {
-			p := common.IndexOf(tags, elem.Tag)
+			p := common.IndexOf(standardTags, elem.Tag)
 			if p == -1 {
 				continue
 			}
 		}
 
-		if !*common.FlagNoBanner {
-			fmt.Printf("%-25s: %s\n", tagName, elem.String())
+		if elem.Tag != dicomtag.PixelData {
+			if !*common.FlagNoBanner {
+				fmt.Printf("%-25s: %s\n", tagName, elem.String())
+			} else {
+				fmt.Printf("%s\n", elem.String())
+			}
 		} else {
-			fmt.Printf("%s\n", elem.String())
-		}
+			if !*extract {
+				continue
+			}
 
-		if elem.Tag == dicomtag.PixelData {
 			data := elem.Value[0].(dicom.PixelDataInfo)
-			for _, frame := range data.Frames {
-				if *extract {
-					path := fmt.Sprintf("%s.%d.jpg", filepath.Join(curdir, filepath.Base(path)), imageCounter)
-					imageCounter++
-					common.Error(os.WriteFile(path, frame, common.DefaultFileMode))
-				}
 
-				img, imgType, err := image.Decode(bytes.NewReader(frame))
+			buf := bytes.Buffer{}
+			for _, frame := range data.Frames {
+				_, err := buf.Write(frame)
 				if common.Error(err) {
 					return err
 				}
-
-				fmt.Printf("bounds x=%d, y=%d\n", img.Bounds().Max.X, img.Bounds().Max.Y)
-				fmt.Printf("%s\n", imgType)
 			}
+
+			filename := filepath.Join(curdir, filepath.Base(path))
+
+			mt, err := common.DetectMimeType("", buf.Bytes())
+			if common.Error(err) {
+				return err
+			}
+
+			filename = fmt.Sprintf("%s.%s", filename, mt.Ext)
+
+			err = os.WriteFile(filename, buf.Bytes(), os.ModePerm)
+			if common.Error(err) {
+				return err
+			}
+
+			fmt.Printf("%-25s:  %s", tagName, mt.MimeType)
+
+			img, _, err := image.Decode(bytes.NewReader(buf.Bytes()))
+			if err == nil {
+				fmt.Printf("width=%d, height=%d", img.Bounds().Max.X, img.Bounds().Max.Y)
+			}
+
+			fmt.Println()
 		}
 	}
 
