@@ -20,7 +20,7 @@ import (
 var (
 	file      = flag.String("f", "", "File you want to parse")
 	recursive = flag.Bool("r", false, "Recursive directory scan")
-	extract   = flag.Bool("x", false, "Extract PixelData")
+	extract   = flag.String("x", "", "Extract PixelData to defined directory")
 	verbose   = flag.Bool("v", false, "Show verbose information")
 	search    = flag.String("s", "", "Tag to search for with case insensitive lookup. Supports regexp")
 )
@@ -98,12 +98,8 @@ func isMpegTransferSyntax(st string) bool {
 
 func processFile(path string) error {
 	fmt.Printf("%s\n", path)
-	curdir, err := os.Getwd()
-	if common.Error(err) {
-		return err
-	}
 
-	data, err := dicom.ReadDataSetFromFile(path, dicom.ReadOptions{DropPixelData: !*extract})
+	data, err := dicom.ReadDataSetFromFile(path, dicom.ReadOptions{DropPixelData: *extract == ""})
 	if common.Error(err) {
 		return err
 	}
@@ -131,7 +127,7 @@ func processFile(path string) error {
 
 	standardTags := []dicomtag.Tag{dicomtag.SOPClassUID, dicomtag.SOPInstanceUID, dicomtag.PatientName, dicomtag.TransferSyntaxUID, dicomtag.PatientID, dicomtag.Columns, dicomtag.Rows}
 
-	if *extract {
+	if *extract != "" {
 		standardTags = append(standardTags, dicomtag.PixelData)
 	}
 
@@ -162,7 +158,7 @@ func processFile(path string) error {
 				fmt.Printf("%s\n", elem.String())
 			}
 		} else {
-			if !*extract {
+			if *extract == "" {
 				continue
 			}
 
@@ -176,21 +172,16 @@ func processFile(path string) error {
 				}
 			}
 
-			filename := filepath.Join(curdir, filepath.Base(path))
+			mt, _ := common.DetectMimeType("", buf.Bytes())
 
-			mt, err := common.DetectMimeType("", buf.Bytes())
+			filename := filepath.Join(*extract, fmt.Sprintf("%s.%s", filepath.Base(path), mt.Ext))
+
+			err := os.WriteFile(filename, buf.Bytes(), os.ModePerm)
 			if common.Error(err) {
 				return err
 			}
 
-			filename = fmt.Sprintf("%s.%s", filename, mt.Ext)
-
-			err = os.WriteFile(filename, buf.Bytes(), os.ModePerm)
-			if common.Error(err) {
-				return err
-			}
-
-			fmt.Printf("%-25s:  %s", tagName, mt.MimeType)
+			fmt.Printf("%-25s:  %s: %s", tagName, mt.MimeType, filename)
 
 			img, _, err := image.Decode(bytes.NewReader(buf.Bytes()))
 			if err == nil {
