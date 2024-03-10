@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.21.1
 
 require (
-	github.com/mpetavy/common v1.7.3
+	github.com/mpetavy/common v1.7.4
 	github.com/mpetavy/go-dicom v0.0.0-20230223204403-807ccc095cae
 )
 
