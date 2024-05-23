@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.21.1
 
 require (
-	github.com/mpetavy/common v1.8.0
+	github.com/mpetavy/common v1.8.1
 	github.com/mpetavy/go-dicom v0.0.0-20230223204403-807ccc095cae
 )
 
@@ -44,4 +44,4 @@ require (
 	software.sslmate.com/src/go-pkcs12 v0.2.0 // indirect
 )
 
-replace github.com/mpetavy/common => ../common
+//replace github.com/mpetavy/common => ../common
