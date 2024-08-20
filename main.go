@@ -176,7 +176,7 @@ func processFile(path string) error {
 
 			filename := filepath.Join(*extract, fmt.Sprintf("%s.%s", filepath.Base(path), mt.Ext))
 
-			err := os.WriteFile(filename, buf.Bytes(), os.ModePerm)
+			err := os.WriteFile(filename, buf.Bytes(), common.DefaultFileMode)
 			if common.Error(err) {
 				return err
 			}
