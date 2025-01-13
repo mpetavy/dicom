@@ -21,7 +21,6 @@ var (
 	file      = flag.String("f", "", "File you want to parse")
 	recursive = flag.Bool("r", false, "Recursive directory scan")
 	extract   = flag.String("x", "", "Extract PixelData to defined directory")
-	verbose   = flag.Bool("v", false, "Show verbose information")
 	search    = flag.String("s", "", "Tag to search for with case insensitive lookup. Supports regexp")
 )
 
@@ -142,13 +141,6 @@ func processFile(path string) error {
 		elem, err := data.FindElementByName(tagName)
 		if common.DebugError(err) {
 			continue
-		}
-
-		if !*verbose {
-			p := common.IndexOf(standardTags, elem.Tag)
-			if p == -1 {
-				continue
-			}
 		}
 
 		if elem.Tag != dicomtag.PixelData {
