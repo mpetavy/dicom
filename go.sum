@@ -62,6 +62,8 @@ github.com/mpetavy/common v1.9.69 h1:WAYba26IJfZ1gZOfy8DgewhltTFsS01XS7smJJFwAsg
 github.com/mpetavy/common v1.9.69/go.mod h1:45f5SVwcBROZQ/cr/rue7jaXYYP/S3dPTtTP3AaadM8=
 github.com/mpetavy/go-dicom v0.0.0-20230223204403-807ccc095cae h1:PjlN0f917VfvxwqjJVvAwyrHZCuNhVAelEsxghfs91M=
 github.com/mpetavy/go-dicom v0.0.0-20230223204403-807ccc095cae/go.mod h1:Ia4O7g73QuYwz4YtHaHKVFuP1aoc3f+Inkhdm5aTxAk=
+github.com/mpetavy/go-dicom v0.0.0-20241216175347-39625280639d h1:Za55CKQh+S7L5zYx70w0pt2cLz//Yknn46Wae0LkGJM=
+github.com/mpetavy/go-dicom v0.0.0-20241216175347-39625280639d/go.mod h1:hpD2Rgl6YTKhuuS0m1Uvvp+BXpmlHQAzXI876h5lTRo=
 github.com/nsf/jsondiff v0.0.0-20230430225905-43f6cf3098c1 h1:dOYG7LS/WK00RWZc8XGgcUTlTxpp3mKhdR2Q9z9HbXM=
 github.com/nsf/jsondiff v0.0.0-20230430225905-43f6cf3098c1/go.mod h1:mpRZBD8SJ55OIICQ3iWH0Yz3cjzA61JdqMLoWXeB2+8=
 github.com/paulrosania/go-charset v0.0.0-20190326053356-55c9d7a5834c h1:P6XGcuPTigoHf4TSu+3D/7QOQ1MbL6alNwrGhcW7sKw=
