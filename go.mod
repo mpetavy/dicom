@@ -6,7 +6,7 @@ toolchain go1.23.2
 
 require (
 	github.com/mpetavy/common v1.9.69
-	github.com/mpetavy/go-dicom v0.0.0-20241216175347-39625280639d
+	github.com/mpetavy/go-dicom v1.0.0
 )
 
 require (
